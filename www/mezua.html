@@ -1,0 +1,91 @@
+<!DOCTYPE html> 
+<html>
+
+<head>
+<!-- Include meta tag to ensure proper rendering and touch zooming -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MEZUA</title>
+<!-- Include jQuery Mobile stylesheets -->
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<!-- Include the jQuery library -->
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<!-- Include the jQuery Mobile library -->
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body> 
+
+<div data-role="page" id="menu">
+
+	<div data-role="header">
+		<h1>MEZUA</h1>
+	</div>
+	
+	<div data-role="content" id="div1">	
+		<form id="form">
+
+		<select id="mySelectID"   name="mySelectID" class="main-form">
+		<option value="">Hautatu bat</option>
+		</select>
+		<textarea name="mezua" id="mezua" style="display:none;">Idatzi mezua...</textarea>
+		<div id="bidali">
+		</div>
+		</form>
+	</div>
+
+	 
+</div>
+
+<script>
+
+$(document).ready(function(){
+var user = window.localStorage.getItem('username');
+		erabfitx = "http://sgta.esy.es/users.php?jsoncallback=?"
+		$.getJSON(erabfitx, { usuario:user})
+		.done(function(loginerantzuna) {
+			$(loginerantzuna).each(function (index, o) {
+				var $option = $("<option/>").attr("value", o.username).text(o.username);
+				$('#mySelectID').append($option);
+			});
+			
+  
+	})
+	return false;
+
+
+
+});
+$('#mySelectID').on('change', function() {
+  if ( this.value !=''){
+	$("#mezua").attr("style", "")
+	//$("#Bidali").attr("type", "submit")
+	$("#bidali").html('<div class="ui-btn ui-input-btn ui-corner-all ui-shadow">Bidali<input type="submit" value="Bidali" id="Bidali" name="Bidali"></div>');
+  }else{
+	$("#mezua").attr("style", "display:none;")
+	$("#bidali").html('');
+	//$("#Bidali").attr("type", "hidden")
+  }
+});
+
+$('#form').submit(function() { 
+	
+	 
+	// recolecta los valores que inserto el usuario
+	var user = window.localStorage.getItem('username');
+	alert(user)
+	var mezua = $("#mezua").val()
+	var bazkide = $("#mySelectID option:selected").val()
+	alert(bazkide)
+  	mezufitx = "http://sgta.esy.es/mezua.php?jsoncallback=?"
+	$.getJSON( mezufitx, { usuario:user ,message:mezua, partner:bazkide})
+	.done(function(mezua) {
+		alert('Zuzen gorde da.')
+  
+	})
+	return false;
+})
+
+
+</script>
+
+</body>
+</html>
